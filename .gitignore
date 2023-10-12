@@ -1,0 +1,13 @@
+composer.phar
+/vendor/
+/nbproject/private/
+/.env
+/composer.lock
+/nbproject/
+/tests/.phpunit.result.cache
+.vscode/settings.json
+/.php-cs-fixer.cache
+/.vscode/
+/.phpunit.result.cache
+/src/.php-cs-fixer.cache
+/.phpunit.cache/
