@@ -1,8 +1,10 @@
 <?php
 
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
-\Ease\Shared::init(['REALPAD_USERNAME', 'REALPAD_PASSWORD', 'REALPAD_TAG', 'MAILKIT_APPID', 'MAILKIT_MD5', 'MAILKIT_MAILINGLIST'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
+\Ease\Shared::init(['REALPAD_USERNAME', 'REALPAD_PASSWORD', 'MAILKIT_APPID', 'MAILKIT_MD5', 'MAILKIT_MAILINGLIST'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
 
 $realpad = new \SpojeNet\Realpad\ApiClient();
 
@@ -10,15 +12,29 @@ if (\Ease\Shared::cfg('APP_DEBUG')) {
     $realpad->logBanner();
 }
 
+$nomailCount = 0;
 foreach ($realpad->listCustomers() as $cid => $customerData) {
+    if (empty(trim($customerData['E-mail']))) {
+        $realpad->addStatusMessage('No mail address for #' . $cid . ' ' . $customerData['Jméno'] . ' (' . $nomailCount++ . ')', 'debug');
+        continue;
+    }
+
     if (\Ease\Shared::cfg('REALPAD_TAG', false)) {
         if (strstr($customerData['Tagy'], \Ease\Shared::cfg('REALPAD_TAG'))) {
+            $customers[$cid] = $customerData;
+        }
+    } elseif (\Ease\Shared::cfg('REALPAD_PROJECT', false)) {
+        if (strstr($customerData['Projekt'], \Ease\Shared::cfg('REALPAD_PROJECT'))) {
             $customers[$cid] = $customerData;
         }
     } else {
         $customers[$cid] = $customerData;
     }
 }
+
+$realpad->addStatusMessage($nomailCount . ' customers without email address skipped.', 'warning');
+$realpad->addStatusMessage(count($customers) . ' customers for import', 'info');
+
 $mailkit = new \Igloonet\MailkitApi\RPC\Client(\Ease\Shared::cfg('MAILKIT_APPID'), \Ease\Shared::cfg('MAILKIT_MD5'));
 
 $userManager = new \Igloonet\MailkitApi\Managers\UsersManager($mailkit, ['cs'], 'cs');
@@ -28,15 +44,56 @@ $listManager = new \Igloonet\MailkitApi\Managers\MailingListsManager($mailkit, [
 // create mailing list
 $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAILINGLIST'));
 
+$spreadsheet = new Spreadsheet();
+
+// Set document properties
+$spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName.' '.\Ease\Shared::AppVersion)
+    ->setLastModifiedBy('n/a')
+    ->setTitle('RealPad to MailKit Import result')
+    ->setSubject('Rea')
+    ->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
+    ->setKeywords('office 2007 openxml php')
+    ->setCategory('Test result file');
+
+// Create a first sheet, representing sales data
+$helper->log('Add some data');
+$spreadsheet->setActiveSheetIndex(0);
+$spreadsheet->getActiveSheet()->setCellValue('B1', 'Invoice');
+$date = new DateTime('now');
+$date->setTime(0, 0, 0);
+$spreadsheet->getActiveSheet()->setCellValue('D1', Date::PHPToExcel($date));
+
 // add user to mailingList
 $position = 0;
-foreach ($customers as $customers) {
+$importErrors = 0;
+foreach ($customers as $customer) {
     $position++;
-    $nameFields = explode(' ', $customers['Jméno']);
-    if(current($nameFields) == '_'){
+    $nameFields = explode(' ', $customer['Jméno']);
+    if (current($nameFields) == '_') {
         unset($nameFields[0]);
     }
-    $user = (new \Igloonet\MailkitApi\DataObjects\User($customers['E-mail']))->setFirstname(current($nameFields))->setLastname(next($nameFields));
-    $newUser = $userManager->addUser($user, $mailingList->getId(), false);
-    $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, count($customers), $user->getFirstName().' '.$user->getLastName(), $customers['E-mail']), 'success');
+    try {
+        $user = (new \Igloonet\MailkitApi\DataObjects\User($customer['E-mail']))->setFirstname(current($nameFields))->setLastname(next($nameFields));
+        $newUser = $userManager->addUser($user, $mailingList->getId(), false);
+
+        $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, count($customers), $user->getFirstName() . ' ' . $user->getLastName(), $customer['E-mail']), 'success');
+    } catch (\Igloonet\MailkitApi\Exceptions\User\UserCreationException $exc) {
+        echo $exc->getTraceAsString();
+        // Convert php array $customer to human readable string
+        array_walk($customer, function(&$value, $key) { $value = "$key: $value"; });
+        $customerInfo = array_reduce($customer, function($carry, $item) { return $carry . "\n" . $item; });
+        $realpad->addStatusMessage($exc->getMessage().' '. $customerInfo, 'error');
+        $importErrors++;
+    }
 }
+
+
+require __DIR__ . '/../Header.php';
+$spreadsheet = require __DIR__ . '/../templates/sampleSpreadsheet.php';
+
+$filename = $helper->getFilename(__FILE__, 'xls');
+$writer = IOFactory::createWriter($spreadsheet, 'Xls');
+
+$callStartTime = microtime(true);
+$writer->save($filename);
+$helper->logWrite($writer, $filename, $callStartTime);
