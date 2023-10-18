@@ -50,8 +50,8 @@ $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName . ' ' . \Ease\Shared::AppVersion)
         ->setLastModifiedBy('n/a')
         ->setTitle('RealPad to MailKit Import result')
-        ->setSubject('Realpad to Mailkit project:'.\Ease\Shared::cfg('REALPAD_PROJECT').' TAG:'.\Ease\Shared::cfg('REALPAD_TAG') )
-        ->setDescription('Import problems log '. date('Y-m-d h:m:s') )
+        ->setSubject('Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'))
+        ->setDescription('Import problems log ' . date('Y-m-d h:m:s'))
         ->setKeywords('RealPad MailKit')
         ->setCategory('Logs');
 $spreadsheet->setActiveSheetIndex(0);
@@ -86,7 +86,7 @@ foreach ($customers as $customer) {
         });
         $realpad->addStatusMessage($exc->getMessage() . ' ' . $customerInfo, 'error');
         $importErrors++;
-        $problems[] = array_merge(['reason'=>$exc->getMessage()],$customer);
+        $problems[] = array_merge(['reason' => $exc->getMessage()], $customer);
     }
 }
 
