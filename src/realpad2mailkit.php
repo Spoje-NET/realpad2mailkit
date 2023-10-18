@@ -1,6 +1,8 @@
 <?php
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -13,9 +15,11 @@ if (\Ease\Shared::cfg('APP_DEBUG')) {
 }
 
 $nomailCount = 0;
+$problems = [];
 foreach ($realpad->listCustomers() as $cid => $customerData) {
     if (empty(trim($customerData['E-mail']))) {
         $realpad->addStatusMessage('No mail address for #' . $cid . ' ' . $customerData['Jméno'] . ' (' . $nomailCount++ . ')', 'debug');
+        $problems[] = array_merge(['reason' => 'No mail address'], $customerData);
         continue;
     }
 
@@ -47,7 +51,7 @@ $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAI
 $spreadsheet = new Spreadsheet();
 
 // Set document properties
-$spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName . ' ' . \Ease\Shared::AppVersion)
+$spreadsheet->getProperties()->setCreator(\Ease\Shared::appName() . ' ' . \Ease\Shared::AppVersion())
         ->setLastModifiedBy('n/a')
         ->setTitle('RealPad to MailKit Import result')
         ->setSubject('Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'))
@@ -55,17 +59,26 @@ $spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName . ' ' . \Ease\Sh
         ->setKeywords('RealPad MailKit')
         ->setCategory('Logs');
 $spreadsheet->setActiveSheetIndex(0);
-$spreadsheet->getActiveSheet()->setCellValue('B1', 'Invoice');
-$date = new DateTime('now');
-$date->setTime(0, 0, 0);
-$spreadsheet->getActiveSheet()->setCellValue('D1', Date::PHPToExcel($date));
+
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(1)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(2)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(3)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(4)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(5)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(6)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(7)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(8)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(9)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(10)->setAutoSize(true);
+$spreadsheet->getActiveSheet()->getColumnDimensionByColumn(11)->setAutoSize(true);
+
 
 // add user to mailingList
 $position = 0;
 $importErrors = 0;
-$problems = [];
 foreach ($customers as $customer) {
     $position++;
+    $customerData = $customer;
     $nameFields = explode(' ', $customer['Jméno']);
     if (current($nameFields) == '_') {
         unset($nameFields[0]);
@@ -86,14 +99,27 @@ foreach ($customers as $customer) {
         });
         $realpad->addStatusMessage($exc->getMessage() . ' ' . $customerInfo, 'error');
         $importErrors++;
-        $problems[] = array_merge(['reason' => $exc->getMessage()], $customer);
+        $problems[] = array_merge(['reason' => $exc->getMessage()], $customerData);
     }
 }
 
-$spreadsheet->fromArray($customer, null, A2);
-$filename = $helper->getFilename(__FILE__, 'xls');
+$spreadsheet->getActiveSheet()->fromArray(array_keys(current($problems)), null, 'A1');
+$spreadsheet->getActiveSheet()->fromArray($problems, null, 'A2');
+$logfilename =  sys_get_temp_dir() . '/realpas2mailtkit_protocol_' . time()  . '_' . \Ease\Functions::randomString() . '.xls';
+
 $writer = IOFactory::createWriter($spreadsheet, 'Xls');
 
 $callStartTime = microtime(true);
-$writer->save($filename);
-$realpad->addStatusMessage('protocol saved to ' . $filename, 'error', 'debug');
+$writer->save($logfilename);
+$realpad->addStatusMessage('protocol saved to ' . $logfilename, 'debug');
+
+if(\Ease\Shared::cfg('EASE_MAILTO') && \Ease\Shared::cfg('EASE_FROM')){
+    $mailer = new \Ease\Mailer(
+        \Ease\Shared::cfg('EASE_MAILTO'), 
+        'Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'),
+        'see attachment '. basename($logfilename)
+     );
+    $mailer->addFile($logfilename,'application/vnd.ms-excel');
+    $mailer->setMailBody('see attachment '. basename($logfilename));
+    $mailer->send();
+}
