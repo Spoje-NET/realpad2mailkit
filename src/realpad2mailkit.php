@@ -47,16 +47,13 @@ $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAI
 $spreadsheet = new Spreadsheet();
 
 // Set document properties
-$spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName.' '.\Ease\Shared::AppVersion)
-    ->setLastModifiedBy('n/a')
-    ->setTitle('RealPad to MailKit Import result')
-    ->setSubject('Rea')
-    ->setDescription('Test document for Office 2007 XLSX, generated using PHP classes.')
-    ->setKeywords('office 2007 openxml php')
-    ->setCategory('Test result file');
-
-// Create a first sheet, representing sales data
-$helper->log('Add some data');
+$spreadsheet->getProperties()->setCreator(\Ease\Shared::AppName . ' ' . \Ease\Shared::AppVersion)
+        ->setLastModifiedBy('n/a')
+        ->setTitle('RealPad to MailKit Import result')
+        ->setSubject('Realpad to Mailkit project:'.\Ease\Shared::cfg('REALPAD_PROJECT').' TAG:'.\Ease\Shared::cfg('REALPAD_TAG') )
+        ->setDescription('Import problems log '. date('Y-m-d h:m:s') )
+        ->setKeywords('RealPad MailKit')
+        ->setCategory('Logs');
 $spreadsheet->setActiveSheetIndex(0);
 $spreadsheet->getActiveSheet()->setCellValue('B1', 'Invoice');
 $date = new DateTime('now');
@@ -66,6 +63,7 @@ $spreadsheet->getActiveSheet()->setCellValue('D1', Date::PHPToExcel($date));
 // add user to mailingList
 $position = 0;
 $importErrors = 0;
+$problems = [];
 foreach ($customers as $customer) {
     $position++;
     $nameFields = explode(' ', $customer['Jméno']);
@@ -80,20 +78,22 @@ foreach ($customers as $customer) {
     } catch (\Igloonet\MailkitApi\Exceptions\User\UserCreationException $exc) {
         echo $exc->getTraceAsString();
         // Convert php array $customer to human readable string
-        array_walk($customer, function(&$value, $key) { $value = "$key: $value"; });
-        $customerInfo = array_reduce($customer, function($carry, $item) { return $carry . "\n" . $item; });
-        $realpad->addStatusMessage($exc->getMessage().' '. $customerInfo, 'error');
+        array_walk($customer, function (&$value, $key) {
+            $value = "$key: $value";
+        });
+        $customerInfo = array_reduce($customer, function ($carry, $item) {
+            return $carry . "\n" . $item;
+        });
+        $realpad->addStatusMessage($exc->getMessage() . ' ' . $customerInfo, 'error');
         $importErrors++;
+        $problems[] = array_merge(['reason'=>$exc->getMessage()],$customer);
     }
 }
 
-
-require __DIR__ . '/../Header.php';
-$spreadsheet = require __DIR__ . '/../templates/sampleSpreadsheet.php';
-
+$spreadsheet->fromArray($customer, null, A2);
 $filename = $helper->getFilename(__FILE__, 'xls');
 $writer = IOFactory::createWriter($spreadsheet, 'Xls');
 
 $callStartTime = microtime(true);
 $writer->save($filename);
-$helper->logWrite($writer, $filename, $callStartTime);
+$realpad->addStatusMessage('protocol saved to ' . $filename, 'error', 'debug');
