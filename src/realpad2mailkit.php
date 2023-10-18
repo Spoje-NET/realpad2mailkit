@@ -2,7 +2,6 @@
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -16,6 +15,7 @@ if (\Ease\Shared::cfg('APP_DEBUG')) {
 
 $nomailCount = 0;
 $problems = [];
+$customers = [];
 foreach ($realpad->listCustomers() as $cid => $customerData) {
     if (empty(trim($customerData['E-mail']))) {
         $realpad->addStatusMessage('No mail address for #' . $cid . ' ' . $customerData['Jméno'] . ' (' . $nomailCount++ . ')', 'debug');
