@@ -11,3 +11,4 @@ composer.phar
 /.phpunit.result.cache
 /src/.php-cs-fixer.cache
 /.phpunit.cache/
+src/salespeople.json
