@@ -12,7 +12,7 @@ Rules-Requires-Root: no
 Package: realpad2mailkit
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}, php-spojenet-realpad-takeout, composer-debian
+Depends: ${misc:Depends}, php-spojenet-realpad-takeout, composer-debian, php-xmlrpc
 Description: Synchronize Realpad Contacts into Mailkit 
  Obtain Email contacty from realpad by project/tags and
  import it into MailKit and send report in XLS format
