@@ -1,4 +1,4 @@
 debian/conf/composer.json       usr/lib/realpad2mailkit/
-src/*			        usr/lib/realpad2mailkit/
+src/*			        usr/share/realpad2mailkit/
 bin/*                           usr/bin/
 .env.example                    etc/realpad2mailkit
