@@ -1,0 +1,10 @@
+#!/bin/sh
+# postinst script for multiflexi-realpad2mailkit
+set -e
+
+. /usr/share/debconf/confmodule
+
+for file in `ls /usr/lib/realpad2mailkit/multiflexi/*.json`
+do
+	multiflexi-json2app $file
+done

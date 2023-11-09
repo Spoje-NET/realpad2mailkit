@@ -1,0 +1,5 @@
+#!/bin/bash
+php -f /usr/lib/realpad2mailkit/realpad2mailkit.php $@
+
+
+

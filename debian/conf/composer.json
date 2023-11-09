@@ -1,0 +1,34 @@
+{
+    "name": "spojenet/realpad2mailkit",
+    "description": "Use mail adress from realpad in mailkit",
+    "type": "project",
+    "version": "1.0",
+    "require": {
+        "deb/ease-core": "*",
+        "deb/realpad-takeout": "*",
+        "meditorial/mailkit-api": "*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Spojenet\\Realpad2mailkit\\": "/usr/share/realpad2mailkit/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Vítězslav Dvořák",
+            "email": "vitezslav.dvorak@spojenet.cz"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "/usr/share/php/EaseCore/"
+        }
+    ],
+    "config": {
+        "vendor-dir": "/var/lib/composer/realpad2mailkit"
+    }
+}
+
+

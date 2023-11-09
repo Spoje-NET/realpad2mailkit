@@ -59,15 +59,14 @@ foreach ($realpadCustomers as $cid => $customerData) {
         $customers[$cid] = $customerData;
     }
 
-    if (array_key_exists($cid,$customers) && empty(trim($customers[$cid]['E-mail']))) {
+    if (array_key_exists($cid, $customers) && empty(trim($customers[$cid]['E-mail']))) {
         $realpad->addStatusMessage('No mail address for #' . $cid . ' ' . $customerData['Jméno'] . ' (' . $nomailCount++ . ')', 'debug');
         $nextRow = $sheet->getHighestRow() + 1 ;
         $sheet->fromArray(array_merge(['reason' => 'No mail address'], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
+        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
         unset($customers[$cid]);
         continue;
     }
-
 }
 
 $realpad->addStatusMessage($nomailCount . ' customers without email address skipped.', 'warning');
@@ -103,14 +102,14 @@ foreach ($customers as $customerInfo) {
         $customFields[6] = $customerData[7]; // ID Prodejce
         $customFields[7] = $customerData[8]; // ID Stavu
         $customFields[8] = $customerData[9]; // ID Zdroje
-        
+
         $nextRow = $sheet->getHighestRow() + 1 ;
         $user = (new \Igloonet\MailkitApi\DataObjects\User($customerInfo['E-mail']))
         ->setFirstname(current($nameFields))->setLastname(next($nameFields))
         ->setCustomFields($customFields);
         $newUser = $userManager->addUser($user, $mailingList->getId(), false);
         $sheet->fromArray(array_merge(['reason' => 'success'], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
+        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
         $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, count($customers), $user->getFirstName() . ' ' . $user->getLastName(), $customerInfo['E-mail']), 'success');
     } catch (\Igloonet\MailkitApi\Exceptions\User\UserCreationException $exc) {
         echo $exc->getTraceAsString();
@@ -125,7 +124,7 @@ foreach ($customers as $customerInfo) {
         $importErrors++;
 
         $sheet->fromArray(array_merge(['reason' => $exc->getMessage()], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaFF0000');
+        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaFF0000');
         $problems[] = array_merge(['reason' => $exc->getMessage()], $customerData);
     }
 }
@@ -138,13 +137,13 @@ $callStartTime = microtime(true);
 $writer->save($logfilename);
 $realpad->addStatusMessage('protocol saved to ' . $logfilename, 'debug');
 
-if(\Ease\Shared::cfg('EASE_MAILTO') && \Ease\Shared::cfg('EASE_FROM')){
+if (\Ease\Shared::cfg('EASE_MAILTO') && \Ease\Shared::cfg('EASE_FROM')) {
     $mailer = new \Ease\Mailer(
-        \Ease\Shared::cfg('EASE_MAILTO'), 
+        \Ease\Shared::cfg('EASE_MAILTO'),
         'Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'),
-        'see attachment '. basename($logfilename)
-     );
-    $mailer->addFile($logfilename,'application/vnd.ms-excel');
-    $mailer->setMailBody('see attachment '. basename($logfilename));
+        'see attachment ' . basename($logfilename)
+    );
+    $mailer->addFile($logfilename, 'application/vnd.ms-excel');
+    $mailer->setMailBody('see attachment ' . basename($logfilename));
     $mailer->send();
 }
