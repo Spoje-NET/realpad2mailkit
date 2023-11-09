@@ -16,4 +16,4 @@ override_dh_install:
 	sed -i -e 's/\.\//\/usr\/lib\/realpad2mailkit\//'                  		debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
 	sed -i -e 's/\.\/css\//\/usr\/share\/realpad2mailkit\/css\//'              debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
 	sed -i -e 's/..\/composer.json/\/usr\/lib\/realpad2mailkit\/composer.json/g' 	     debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e "s/__DIR__.'/'\/usr\/share\/realpad2mailkit/g"               	debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
+	sed -i -e "s/__DIR__ . '\/..\/vendor/'\/var\/lib\/composer\/realpad2mailkit/"    	debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
