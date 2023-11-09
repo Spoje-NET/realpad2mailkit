@@ -12,8 +12,5 @@ override_dh_install:
 	dh_install
 	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/conf/composer.json
 	sed -i -e 's/..\/i18n/\/usr\/share\/locale/g'            	        		debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e 's/..\/vendor/\/var\/lib\/composer\/realpad2mailkit/g' 			debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e 's/\.\//\/usr\/lib\/realpad2mailkit\//'                  		debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e 's/\.\/css\//\/usr\/share\/realpad2mailkit\/css\//'              debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e 's/..\/composer.json/\/usr\/lib\/realpad2mailkit\/composer.json/g' 	     debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
 	sed -i -e "s/__DIR__ . '\/..\/vendor/'\/var\/lib\/composer\/realpad2mailkit/"    	debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
+	sed -i -e "s/..\/.env//" debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
