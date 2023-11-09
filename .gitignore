@@ -12,3 +12,9 @@ composer.phar
 /src/.php-cs-fixer.cache
 /.phpunit.cache/
 src/salespeople.json
+/debian/.debhelper/
+/debian/multiflexi-realpad2mailkit/
+/debian/realpad2mailkit/
+/debian/debhelper-build-stamp
+/debian/multiflexi-realpad2mailkit.debhelper.log
+/debian/multiflexi-realpad2mailkit.substvars
