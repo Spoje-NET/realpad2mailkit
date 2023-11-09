@@ -4,9 +4,8 @@
   "type": "project",
   "version": "0.1.0",
   "require": {
-    "deb/ease-core": "*",
     "deb/realpad-takeout": "*",
-    "meditorial/mailkit-api": "*"
+    "meditorial/mailkit-api": "dev-DEVEDU-691-php-8-prepare"
   },
   "license": "MIT",
   "autoload": {
@@ -24,6 +23,10 @@
     {
       "type": "path",
       "url": "/usr/share/php/EaseCore/"
+    },
+    {
+      "type": "path",
+      "url": "/usr/share/php/RealpadTakeout/"
     }
   ],
   "config": {
