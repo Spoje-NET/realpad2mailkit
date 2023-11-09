@@ -3,7 +3,6 @@ set -e
 
 case "$1" in
     configure)
-	cat /usr/lib/realpad2mailkit/composer.json
 	composer-debian realpad2mailkit
     ;;
 
