@@ -10,7 +10,7 @@ Rules-Requires-Root: no
 #Vcs-Browser: https://salsa.debian.org/debian/realpad2mailkit
 
 Package: realpad2mailkit
-Architecture: any
+Architecture: all
 Multi-Arch: foreign
 Depends: ${misc:Depends}, php-spojenet-realpad-takeout
 Description: Synchronize Realpad Contacts into Mailkit 
@@ -18,7 +18,7 @@ Description: Synchronize Realpad Contacts into Mailkit
  import it into MailKit and send report in XLS format
 
 Package: multiflexi-realpad2mailkit
-Architecture: any
+Architecture: all
 Multi-Arch: foreign
 Depends: multiflexi realpad2mailkit
 Description: Install realpad2mailkit into MultiFlexi
