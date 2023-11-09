@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ `debian/phpver | awk -F. '{print $1}'` = "8" ]
+then
+    jq '.require."meditorial/mailkit-api" = "dev-DEVEDU-691-php-8-prepare"'  debian/conf/composer.json 
+else
+    jq '.require."meditorial/mailkit-api" = "*"'  debian/conf/composer.json 
+fi
+
