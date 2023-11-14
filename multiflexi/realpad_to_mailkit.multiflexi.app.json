@@ -5,8 +5,9 @@
     "executable": "realpad2mailkit",
     "setup": "",
     "cmdparams": "",
-    "deploy": "sudo apt install realpad2mailkit",
+    "deploy": "apt install realpad2mailkit",
     "homepage": "https:\/\/github.com\/Spoje-NET\/realpad2mailkit\/",
+    "requirements": "",
     "environment": {
         "REALPAD_USERNAME": {
             "type": "text",
@@ -54,5 +55,5 @@
             "defval": ""
         }
     },
-    "multiflexi": "vitexsoftware\/multiflexi v1.7.0.158 @system 2023-11-08 07:25:07 GMT"
+    "multiflexi": ""
 }
