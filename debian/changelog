@@ -1,6 +1,7 @@
-realpad2mailkit (0.1.0) UNRELEASED; urgency=low
+realpad2mailkit (0.1.1) UNRELEASED; urgency=low
 
-  * Initial release. Closes: #nnnn
-    <nnnn is the bug number of your ITP>
+  [ Vítězslav Dvořák ]
+  * Initial release fix
 
- -- Vítězslav Dvořák <info@vitexsoftware.cz>  Wed, 08 Nov 2023 20:05:01 +0100
+
+ -- vitex <info@vitexsoftware.cz>  Tue, 14 Nov 2023 10:14:53 +0100
