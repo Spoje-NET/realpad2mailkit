@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "require": {
     "deb/realpad-takeout": "*",
-    "meditorial/mailkit-api": "dev-DEVEDU-691-php-8-prepare"
+    "meditorial/mailkit-api": "dev-master || dev-DEVEDU-691-php-8-prepare"
   },
   "license": "MIT",
   "autoload": {
