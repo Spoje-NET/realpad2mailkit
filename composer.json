@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "spojenet/realpad-takeout": "*",
-        "meditorial/mailkit-api": "*"
+        "meditorial/mailkit-api": "dev-DEVEDU-691-php-8-prepare"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
