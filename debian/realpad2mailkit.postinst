@@ -1,9 +1,12 @@
 #!/bin/sh
 set -e
 
+cat /usr/lib/realpad2mailkit/composer.json
+
+composer-debian realpad2mailkit
+
 case "$1" in
     configure)
-	composer-debian realpad2mailkit
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
