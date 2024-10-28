@@ -1,23 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * This file is part of the Realpad2Mailkit package
+ *
+ * https://github.com/Spoje-NET/realpad2mailkit/
+ *
+ * (c) SpojeNet IT s.r.o. <https://spojenet.cz/>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
-\Ease\Shared::init(['REALPAD_USERNAME', 'REALPAD_PASSWORD', 'MAILKIT_APPID', 'MAILKIT_MD5', 'MAILKIT_MAILINGLIST'], array_key_exists(1, $argv) ? $argv[1] : '../.env');
+\Ease\Shared::init(['REALPAD_USERNAME', 'REALPAD_PASSWORD', 'MAILKIT_APPID', 'MAILKIT_MD5', 'MAILKIT_MAILINGLIST'], \array_key_exists(1, $argv) ? $argv[1] : '../.env');
 
 $realpad = new \SpojeNet\Realpad\ApiClient();
 $spreadsheet = new Spreadsheet();
 
 // Set document properties
-$spreadsheet->getProperties()->setCreator(\Ease\Shared::appName() . ' ' . \Ease\Shared::AppVersion())
-        ->setLastModifiedBy('n/a')
-        ->setTitle('RealPad to MailKit Import result')
-        ->setSubject('Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'))
-        ->setDescription('Import problems log ' . date('Y-m-d h:m:s'))
-        ->setKeywords('RealPad MailKit')
-        ->setCategory('Logs');
+$spreadsheet->getProperties()->setCreator(\Ease\Shared::appName().' '.\Ease\Shared::AppVersion())
+    ->setLastModifiedBy('n/a')
+    ->setTitle('RealPad to MailKit Import result')
+    ->setSubject('Realpad to Mailkit project:'.\Ease\Shared::cfg('REALPAD_PROJECT').' TAG:'.\Ease\Shared::cfg('REALPAD_TAG'))
+    ->setDescription('Import problems log '.date('Y-m-d h:m:s'))
+    ->setKeywords('RealPad MailKit')
+    ->setCategory('Logs');
 $spreadsheet->setActiveSheetIndex(0);
 
 $sheet = $spreadsheet->getActiveSheet();
@@ -34,8 +47,6 @@ $sheet->getColumnDimensionByColumn(9)->setAutoSize(true);
 $sheet->getColumnDimensionByColumn(10)->setAutoSize(true);
 $sheet->getColumnDimensionByColumn(11)->setAutoSize(true);
 
-
-
 if (\Ease\Shared::cfg('APP_DEBUG')) {
     $realpad->logBanner();
 }
@@ -47,6 +58,7 @@ $nomailCount = 0;
 $problems = [];
 $customers = [];
 $nextRow = 0;
+
 foreach ($realpadCustomers as $cid => $customerData) {
     if (\Ease\Shared::cfg('REALPAD_TAG', false)) {
         if (strstr($customerData['Tagy'], \Ease\Shared::cfg('REALPAD_TAG'))) {
@@ -60,18 +72,19 @@ foreach ($realpadCustomers as $cid => $customerData) {
         $customers[$cid] = $customerData;
     }
 
-    if (array_key_exists($cid, $customers) && empty(trim($customers[$cid]['E-mail']))) {
-        $realpad->addStatusMessage('No mail address for #' . $cid . ' ' . $customerData['Jméno'] . ' (' . $nomailCount++ . ')', 'debug');
-        $nextRow = $sheet->getHighestRow() + 1 ;
-        $sheet->fromArray(array_merge(['reason' => 'No mail address'], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
+    if (\array_key_exists($cid, $customers) && empty(trim($customers[$cid]['E-mail']))) {
+        $realpad->addStatusMessage('No mail address for #'.$cid.' '.$customerData['Jméno'].' ('.$nomailCount++.')', 'debug');
+        $nextRow = $sheet->getHighestRow() + 1;
+        $sheet->fromArray(array_merge(['reason' => 'No mail address'], $customerData), null, 'A'.$nextRow);
+        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
         unset($customers[$cid]);
+
         continue;
     }
 }
 
-$realpad->addStatusMessage($nomailCount . ' customers without email address skipped.', 'warning');
-$realpad->addStatusMessage(count($customers) . ' customers for import', 'info');
+$realpad->addStatusMessage($nomailCount.' customers without email address skipped.', 'warning');
+$realpad->addStatusMessage(\count($customers).' customers for import', 'info');
 
 $mailkit = new \Igloonet\MailkitApi\RPC\Client(\Ease\Shared::cfg('MAILKIT_APPID'), \Ease\Shared::cfg('MAILKIT_MD5'));
 
@@ -85,14 +98,17 @@ $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAI
 // add user to mailingList
 $position = 0;
 $importErrors = 0;
+
 foreach ($customers as $customerInfo) {
-    $position++;
+    ++$position;
     $customerData = array_values($customerInfo);
 
     $nameFields = explode(' ', $customerInfo['Jméno']);
-    if (current($nameFields) == '_') {
+
+    if (current($nameFields) === '_') {
         unset($nameFields[0]);
     }
+
     try {
         $customFields = [];
         $customFields[1] = $customerData[0]; // Projekt
@@ -104,48 +120,48 @@ foreach ($customers as $customerInfo) {
         $customFields[7] = $customerData[8]; // ID Stavu
         $customFields[8] = $customerData[9]; // ID Zdroje
 
-        $nextRow = $sheet->getHighestRow() + 1 ;
+        $nextRow = $sheet->getHighestRow() + 1;
         $user = (new \Igloonet\MailkitApi\DataObjects\User($customerInfo['E-mail']))
-        ->setFirstname(current($nameFields))->setLastname(next($nameFields))
-        ->setCustomFields($customFields);
+            ->setFirstname(current($nameFields))->setLastname(next($nameFields))
+            ->setCustomFields($customFields);
         $newUser = $userManager->addUser($user, $mailingList->getId(), false);
-        $sheet->fromArray(array_merge(['reason' => 'success'], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
-        $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, count($customers), $user->getFirstName() . ' ' . $user->getLastName(), $customerInfo['E-mail']), 'success');
+        $sheet->fromArray(array_merge(['reason' => 'success'], $customerData), null, 'A'.$nextRow);
+        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
+        $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, \count($customers), $user->getFirstName().' '.$user->getLastName(), $customerInfo['E-mail']), 'success');
     } catch (\Igloonet\MailkitApi\Exceptions\User\UserCreationException $exc) {
         echo $exc->getTraceAsString();
         // Convert php array $customerInfo to human readable string
-        array_walk($customerInfo, function (&$value, $key) {
-            $value = "$key: $value";
+        array_walk($customerInfo, static function (&$value, $key): void {
+            $value = "{$key}: {$value}";
         });
-        $customerInfo = array_reduce($customerInfo, function ($carry, $item) {
-            return $carry . "\n" . $item;
+        $customerInfo = array_reduce($customerInfo, static function ($carry, $item) {
+            return $carry."\n".$item;
         });
-        $realpad->addStatusMessage($exc->getMessage() . ' ' . $customerInfo, 'error');
-        $importErrors++;
+        $realpad->addStatusMessage($exc->getMessage().' '.$customerInfo, 'error');
+        ++$importErrors;
 
-        $sheet->fromArray(array_merge(['reason' => $exc->getMessage()], $customerData), null, 'A' . $nextRow);
-        $sheet->getStyle('A' . $nextRow . ':K' . $nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaFF0000');
+        $sheet->fromArray(array_merge(['reason' => $exc->getMessage()], $customerData), null, 'A'.$nextRow);
+        $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaFF0000');
         $problems[] = array_merge(['reason' => $exc->getMessage()], $customerData);
     }
 }
 
-$logfilename =  sys_get_temp_dir() . '/realpad2mailtkit_protocol_' . time()  . '_' . \Ease\Functions::randomString() . '.xls';
+$logfilename = sys_get_temp_dir().'/realpad2mailtkit_protocol_'.time().'_'.\Ease\Functions::randomString().'.xls';
 
 $writer = IOFactory::createWriter($spreadsheet, 'Xls');
 
 $callStartTime = microtime(true);
 $writer->save($logfilename);
-$realpad->addStatusMessage('protocol saved to ' . $logfilename, 'debug');
+$realpad->addStatusMessage('protocol saved to '.$logfilename, 'debug');
 
 if (\Ease\Shared::cfg('EASE_MAILTO') && \Ease\Shared::cfg('EASE_FROM')) {
     $mailer = new \Ease\Mailer(
         \Ease\Shared::cfg('EASE_MAILTO'),
-        'Realpad to Mailkit project:' . \Ease\Shared::cfg('REALPAD_PROJECT') . ' TAG:' . \Ease\Shared::cfg('REALPAD_TAG'),
-        'see attachment ' . basename($logfilename)
+        'Realpad to Mailkit project:'.\Ease\Shared::cfg('REALPAD_PROJECT').' TAG:'.\Ease\Shared::cfg('REALPAD_TAG'),
+        'see attachment '.basename($logfilename),
     );
     $mailer->addFile($logfilename, 'application/vnd.ms-excel');
-    $mailer->setMailBody('see attachment ' . basename($logfilename) . "\n" . "Generated by " . \Ease\Shared::AppName() . ' ' . \Ease\Shared::appVersion());
+    $mailer->setMailBody('see attachment '.basename($logfilename)."\nGenerated by ".\Ease\Shared::AppName().' '.\Ease\Shared::appVersion());
     $mailer->send();
 } else {
     $realpad->addStatusMessage('Specify EASE_MAILTO and EASE_FROM to send protocol by mail');
