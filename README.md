@@ -16,6 +16,15 @@ You can configure this connector by configuration keys in system environment or 
 - **MAILKIT_MD5** - grab on [integration](https://app.mailkit.eu/action,setting/section,6/action2,integration) page
 - **MAILKIT_MAILINGLIST** - requied, must exists
 
+MultiFlexi
+----------
+
+Realpad2Mailkit is ready for run as [MultiFlexi](https://multiflexi.eu) application.
+See the full list of ready-to-run applications within the MultiFlexi platform on the [application list page](https://www.multiflexi.eu/apps.php).
+
+[![MultiFlexi App](https://github.com/VitexSoftware/MultiFlexi/blob/main/doc/multiflexi-app.svg)](https://www.multiflexi.eu/apps.php)
+
+
 ## Installation
 
 ```shell

@@ -1,3 +1,5 @@
-multiflexi/*  usr/lib/realpad2mailkit/multiflexi
+multiflexi/*.json  usr/lib/realpad2mailkit/multiflexi
+multiflexi/*.svg   usr/share/multiflexi/images
+
 
 
