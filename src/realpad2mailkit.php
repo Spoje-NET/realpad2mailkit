@@ -121,9 +121,11 @@ foreach ($customers as $customerInfo) {
         $customFields[8] = $customerData[9]; // ID Zdroje
 
         $nextRow = $sheet->getHighestRow() + 1;
+        
+        $firstname = current($nameFields) ?? null;
+        $lastname = next($nameFields) ?? null;
         $user = (new \Igloonet\MailkitApi\DataObjects\User($customerInfo['E-mail']))
-            ->setFirstname(current($nameFields))->setLastname(next($nameFields))
-            ->setCustomFields($customFields);
+            ->setFirstname($firstname)->setLastname($lastname)->setCustomFields($customFields);
         $newUser = $userManager->addUser($user, $mailingList->getId(), false);
         $sheet->fromArray(array_merge(['reason' => 'success'], $customerData), null, 'A'.$nextRow);
         $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
