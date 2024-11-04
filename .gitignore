@@ -19,3 +19,6 @@ src/salespeople.json
 /debian/multiflexi-realpad2mailkit.debhelper.log
 /debian/multiflexi-realpad2mailkit.substvars
 /.build/
+/debian/files
+/debian/realpad2mailkit.debhelper.log
+/debian/realpad2mailkit.substvars

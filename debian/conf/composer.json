@@ -2,7 +2,7 @@
   "name": "spojenet/realpad2mailkit",
   "description": "Use mail adress from realpad in mailkit",
   "type": "project",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "require": {
     "deb/realpad-takeout": "*",
     "meditorial/mailkit-api": "dev-master || dev-DEVEDU-691-php-8-prepare"
