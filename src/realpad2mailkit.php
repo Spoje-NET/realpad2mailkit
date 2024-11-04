@@ -72,7 +72,7 @@ foreach ($realpadCustomers as $cid => $customerData) {
         $customers[$cid] = $customerData;
     }
 
-    if (\array_key_exists($cid, $customers) && empty(trim($customers[$cid]['E-mail']))) {
+    if (\array_key_exists($cid, $customers) && empty(trim((string)$customers[$cid]['E-mail']))) {
         $realpad->addStatusMessage('No mail address for #'.$cid.' '.$customerData['Jméno'].' ('.$nomailCount++.')', 'debug');
         $nextRow = $sheet->getHighestRow() + 1;
         $sheet->fromArray(array_merge(['reason' => 'No mail address'], $customerData), null, 'A'.$nextRow);
