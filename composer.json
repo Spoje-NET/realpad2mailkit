@@ -3,7 +3,7 @@
     "description": "Use mail adress from realpad in mailkit",
     "type": "project",
     "require": {
-        "spojenet/realpad-takeout": "*",
+        "spojenet/realpad-takeout": "^1.0",
         "meditorial/mailkit-api": "dev-DEVEDU-691-php-8-prepare"
     },
     "require-dev": {
