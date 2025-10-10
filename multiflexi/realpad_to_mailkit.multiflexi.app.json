@@ -12,7 +12,6 @@
     },
     "tags": "Realpad,Mailkit",
     "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
-    "image": "",
     "executable": "realpad2mailkit",
     "environment": {
         "REALPAD_USERNAME": {
