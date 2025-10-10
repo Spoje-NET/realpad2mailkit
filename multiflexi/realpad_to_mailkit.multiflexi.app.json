@@ -1,61 +1,100 @@
 {
-    "image": "",
-    "name": "Realpad to Mailkit",
-    "description": "Synchronize Realpad Contacts into Mailkit ",
-    "executable": "realpad2mailkit",
-    "setup": "",
-    "cmdparams": "",
-    "deploy": "apt install realpad2mailkit",
-    "homepage": "https:\/\/github.com\/Spoje-NET\/realpad2mailkit\/",
-    "topics": "Realpad,Mailkit",
+    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+    "schemaVersion": "3.0.0",
     "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
-    "requirements": "RealpadTakeout,Mailkit",
+    "name": {
+        "en": "Realpad to Mailkit",
+        "cs": "Realpad to Mailkit"
+    },
+    "description": {
+        "en": "Synchronize Realpad Contacts into Mailkit ",
+        "cs": "Synchronize Realpad Contacts into Mailkit "
+    },
+    "tags": "Realpad,Mailkit",
+    "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
+    "image": "",
+    "executable": "realpad2mailkit",
     "environment": {
         "REALPAD_USERNAME": {
             "type": "text",
-            "description": "Your Realpad Username",
-            "defval": ""
+            "description": {
+                "en": "Your Realpad Username",
+                "cs": "Your Realpad Username"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "REALPAD_PASSWORD": {
             "type": "text",
-            "description": "Your Realpad Password",
-            "defval": ""
+            "description": {
+                "en": "Your Realpad Password",
+                "cs": "Your Realpad Password"
+            },
+            "defval": "",
+            "category": "Security"
         },
         "REALPAD_TAG": {
             "type": "text",
-            "description": "only tag to export",
-            "defval": ""
+            "description": {
+                "en": "only tag to export",
+                "cs": "only tag to export"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "REALPAD_PROJECT": {
             "type": "text",
-            "description": "only project substring to export",
-            "defval": ""
+            "description": {
+                "en": "only project substring to export",
+                "cs": "only project substring to export"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "MAILKIT_APPID": {
             "type": "text",
-            "description": "grab on integration page",
-            "defval": ""
+            "description": {
+                "en": "grab on integration page",
+                "cs": "grab on integration page"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "MAILKIT_MD5": {
             "type": "text",
-            "description": "grab on integration page",
-            "defval": ""
+            "description": {
+                "en": "grab on integration page",
+                "cs": "grab on integration page"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "MAILKIT_MAILINGLIST": {
             "type": "text",
-            "description": "requied, must exists",
-            "defval": ""
+            "description": {
+                "en": "requied, must exists",
+                "cs": "requied, must exists"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "EASE_MAILTO": {
             "type": "text",
-            "description": "Send Import Report to",
-            "defval": ""
+            "description": {
+                "en": "Send Import Report to",
+                "cs": "Send Import Report to"
+            },
+            "defval": "",
+            "category": "Other"
         },
         "EASE_FROM": {
             "type": "text",
-            "description": "Report sender From Address",
-            "defval": ""
+            "description": {
+                "en": "Report sender From Address",
+                "cs": "Report sender From Address"
+            },
+            "defval": "",
+            "category": "Other"
         }
-    },
-    "multiflexi": ""
+    }
 }
