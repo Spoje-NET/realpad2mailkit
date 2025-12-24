@@ -1,4 +1,5 @@
 {
+    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
     "image": "",
     "name": "Realpad to Mailkit",
     "description": "Synchronize Realpad Contacts into Mailkit ",
@@ -12,47 +13,47 @@
     "requirements": "RealpadTakeout,Mailkit",
     "environment": {
         "REALPAD_USERNAME": {
-            "type": "text",
+            "type": "string",
             "description": "Your Realpad Username",
             "defval": ""
         },
         "REALPAD_PASSWORD": {
-            "type": "text",
+            "type": "password",
             "description": "Your Realpad Password",
             "defval": ""
         },
         "REALPAD_TAG": {
-            "type": "text",
+            "type": "string",
             "description": "only tag to export",
             "defval": ""
         },
         "REALPAD_PROJECT": {
-            "type": "text",
+            "type": "string",
             "description": "only project substring to export",
             "defval": ""
         },
         "MAILKIT_APPID": {
-            "type": "text",
+            "type": "string",
             "description": "grab on integration page",
             "defval": ""
         },
         "MAILKIT_MD5": {
-            "type": "text",
+            "type": "string",
             "description": "grab on integration page",
             "defval": ""
         },
         "MAILKIT_MAILINGLIST": {
-            "type": "text",
+            "type": "string",
             "description": "requied, must exists",
             "defval": ""
         },
         "EASE_MAILTO": {
-            "type": "text",
+            "type": "email",
             "description": "Send Import Report to",
             "defval": ""
         },
         "EASE_FROM": {
-            "type": "text",
+            "type": "email",
             "description": "Report sender From Address",
             "defval": ""
         }
