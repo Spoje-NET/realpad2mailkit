@@ -4,8 +4,15 @@
     "type": "project",
     "require": {
         "spojenet/realpad-takeout": "^1.0",
-        "meditorial/mailkit-api": "dev-DEVEDU-691-php-8-prepare"
+        "meditorial/mailkit-api": "dev-main"
     },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../mailkit-api",
+            "options": { "symlink": true }
+        }
+    ],
     "require-dev": {
         "phpunit/phpunit": "*",
         "phpstan/phpstan": "*",
