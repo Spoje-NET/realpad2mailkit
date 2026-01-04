@@ -1,99 +1,108 @@
 {
-    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
-    "schemaVersion": "3.0.0",
-    "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
-    "name": {
-        "en": "Realpad to Mailkit",
-        "cs": "Realpad to Mailkit"
+  "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+  "schemaVersion": "3.2.1",
+  "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
+  "name": {
+    "en": "Realpad to Mailkit",
+    "cs": "Realpad to Mailkit"
+  },
+  "description": {
+    "en": "Synchronize Realpad Contacts into Mailkit ",
+    "cs": "Synchronize Realpad Contacts into Mailkit "
+  },
+  "tags": "Realpad,Mailkit",
+  "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
+  "executable": "realpad2mailkit",
+  "environment": {
+    "REALPAD_USERNAME": {
+      "type": "string",
+      "description": {
+        "en": "Your Realpad Username",
+        "cs": "Your Realpad Username"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
     },
-    "description": {
-        "en": "Synchronize Realpad Contacts into Mailkit ",
-        "cs": "Synchronize Realpad Contacts into Mailkit "
+    "REALPAD_PASSWORD": {
+      "type": "string",
+      "description": {
+        "en": "Your Realpad Password",
+        "cs": "Your Realpad Password"
+      },
+      "defval": "",
+      "category": "Security",
+      "required": false
     },
-    "tags": "Realpad,Mailkit",
-    "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
-    "executable": "realpad2mailkit",
-    "environment": {
-        "REALPAD_USERNAME": {
-            "type": "text",
-            "description": {
-                "en": "Your Realpad Username",
-                "cs": "Your Realpad Username"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "REALPAD_PASSWORD": {
-            "type": "text",
-            "description": {
-                "en": "Your Realpad Password",
-                "cs": "Your Realpad Password"
-            },
-            "defval": "",
-            "category": "Security"
-        },
-        "REALPAD_TAG": {
-            "type": "text",
-            "description": {
-                "en": "only tag to export",
-                "cs": "only tag to export"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "REALPAD_PROJECT": {
-            "type": "text",
-            "description": {
-                "en": "only project substring to export",
-                "cs": "only project substring to export"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "MAILKIT_APPID": {
-            "type": "text",
-            "description": {
-                "en": "grab on integration page",
-                "cs": "grab on integration page"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "MAILKIT_MD5": {
-            "type": "text",
-            "description": {
-                "en": "grab on integration page",
-                "cs": "grab on integration page"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "MAILKIT_MAILINGLIST": {
-            "type": "text",
-            "description": {
-                "en": "requied, must exists",
-                "cs": "requied, must exists"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "EASE_MAILTO": {
-            "type": "text",
-            "description": {
-                "en": "Send Import Report to",
-                "cs": "Send Import Report to"
-            },
-            "defval": "",
-            "category": "Other"
-        },
-        "EASE_FROM": {
-            "type": "text",
-            "description": {
-                "en": "Report sender From Address",
-                "cs": "Report sender From Address"
-            },
-            "defval": "",
-            "category": "Other"
-        }
+    "REALPAD_TAG": {
+      "type": "string",
+      "description": {
+        "en": "only tag to export",
+        "cs": "only tag to export"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "REALPAD_PROJECT": {
+      "type": "string",
+      "description": {
+        "en": "only project substring to export",
+        "cs": "only project substring to export"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "MAILKIT_APPID": {
+      "type": "string",
+      "description": {
+        "en": "grab on integration page",
+        "cs": "grab on integration page"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "MAILKIT_MD5": {
+      "type": "string",
+      "description": {
+        "en": "grab on integration page",
+        "cs": "grab on integration page"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "MAILKIT_MAILINGLIST": {
+      "type": "string",
+      "description": {
+        "en": "requied, must exists",
+        "cs": "requied, must exists"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "EASE_MAILTO": {
+      "type": "string",
+      "description": {
+        "en": "Send Import Report to",
+        "cs": "Send Import Report to"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
+    },
+    "EASE_FROM": {
+      "type": "string",
+      "description": {
+        "en": "Report sender From Address",
+        "cs": "Report sender From Address"
+      },
+      "defval": "",
+      "category": "Other",
+      "required": false
     }
+  }
 }
