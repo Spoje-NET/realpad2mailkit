@@ -20,6 +20,6 @@ Description: Synchronize Realpad Contacts into Mailkit
 Package: multiflexi-realpad2mailkit
 Architecture: all
 Multi-Arch: foreign
-Depends: multiflexi, realpad2mailkit
+Depends: multiflexi-cli, realpad2mailkit
 Description: Install realpad2mailkit into MultiFlexi
  Tool and its configurations in json format ready to install

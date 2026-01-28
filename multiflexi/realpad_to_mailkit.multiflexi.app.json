@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
   "schemaVersion": "3.2.1",
   "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
@@ -23,6 +24,66 @@
       "defval": "",
       "category": "Other",
       "required": false
+=======
+    "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/multiflexi.app.schema.json",
+    "image": "",
+    "name": "Realpad to Mailkit",
+    "description": "Synchronize Realpad Contacts into Mailkit ",
+    "executable": "realpad2mailkit",
+    "setup": "",
+    "cmdparams": "",
+    "deploy": "apt install realpad2mailkit",
+    "homepage": "https:\/\/github.com\/Spoje-NET\/realpad2mailkit\/",
+    "topics": "Realpad,Mailkit",
+    "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
+    "requirements": "RealpadTakeout,Mailkit",
+    "environment": {
+        "REALPAD_USERNAME": {
+            "type": "string",
+            "description": "Your Realpad Username",
+            "defval": ""
+        },
+        "REALPAD_PASSWORD": {
+            "type": "password",
+            "description": "Your Realpad Password",
+            "defval": ""
+        },
+        "REALPAD_TAG": {
+            "type": "string",
+            "description": "only tag to export",
+            "defval": ""
+        },
+        "REALPAD_PROJECT": {
+            "type": "string",
+            "description": "only project substring to export",
+            "defval": ""
+        },
+        "MAILKIT_APPID": {
+            "type": "string",
+            "description": "grab on integration page",
+            "defval": ""
+        },
+        "MAILKIT_MD5": {
+            "type": "string",
+            "description": "grab on integration page",
+            "defval": ""
+        },
+        "MAILKIT_MAILINGLIST": {
+            "type": "string",
+            "description": "requied, must exists",
+            "defval": ""
+        },
+        "EASE_MAILTO": {
+            "type": "email",
+            "description": "Send Import Report to",
+            "defval": ""
+        },
+        "EASE_FROM": {
+            "type": "email",
+            "description": "Report sender From Address",
+            "defval": ""
+        }
+>>>>>>> 09d743b9b6bcdafdd8d05cc26b6f7673e7b6019c
     },
     "REALPAD_PASSWORD": {
       "type": "string",

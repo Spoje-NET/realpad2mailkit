@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="console-application">
+  <id>io.github.spoje_net.realpad2mailkit</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>realpad2mailkit</name>
+  <summary>Synchronize Realpad Contacts into Mailkit </summary>
+  <description>
+    <p>
+      Obtain Email contacty from realpad by project/tags and import it into MailKit and send report in XLS format Tool and its configurations in json format ready to install
+    </p>
+  </description>
+  <categories>
+    <category>System</category>
+    <category>ConsoleOnly</category>
+  </categories>
+  <url type="homepage">https://github.com/Spoje-NET/realpad2mailkit</url>
+  <url type="bugtracker">https://github.com/Spoje-NET/realpad2mailkit/issues</url>
+  <developer id="io.github.spoje_net">
+    <name>Spoje.Net</name>
+  </developer>
+  <provides>
+    <binary>realpad2mailkit</binary>
+  </provides>
+  <content_rating type="oars-1.1"/>
+</component>
