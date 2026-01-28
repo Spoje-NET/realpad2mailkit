@@ -95,7 +95,13 @@ if ($realpadCustomers) {
     $listManager = new \Igloonet\MailkitApi\Managers\MailingListsManager($mailkit, ['cs'], 'cs');
 
     // create mailing list
-    $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAILINGLIST'));
+    try {
+        $mailingList = $listManager->getMailingListByName(\Ease\Shared::cfg('MAILKIT_MAILINGLIST'));
+    } catch (\Igloonet\MailkitApi\RPC\Exceptions\UnauthorizedException $exc) {
+        $realpad->addStatusMessage('401 Unauthorized: '.$exc->getMessage(), 'error');
+        exit(146); 
+    }
+
 
     // add user to mailingList
     $position = 0;
