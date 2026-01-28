@@ -113,6 +113,14 @@
       },
       "severity": "error",
       "retry": false
+    },
+    "246": {
+      "description": {
+        "en": "Error 501 No realpad customers provided",
+        "cs": "Chyba 501 Realpad nevrátil seznam uživatů"
+      },
+      "severity": "error",
+      "retry": true
     }
   }
 }
