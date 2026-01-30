@@ -4,11 +4,11 @@
   "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
   "name": {
     "en": "Realpad to Mailkit",
-    "cs": "Realpad to Mailkit"
+    "cs": "Realpad do Mailkitu"
   },
   "description": {
     "en": "Synchronize Realpad Contacts into Mailkit ",
-    "cs": "Synchronize Realpad Contacts into Mailkit "
+    "cs": "Synchronizovat kontakty z Realpadu do Mailkitu "
   },
   "tags": ["Realpad", "Mailkit"],
   "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
