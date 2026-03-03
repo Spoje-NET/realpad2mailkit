@@ -8,9 +8,8 @@
     },
     "repositories": [
         {
-            "type": "path",
-            "url": "../mailkit-api",
-            "options": { "symlink": true }
+            "type": "vcs",
+            "url": "https://github.com/Spoje-NET/mailkit-api"
         }
     ],
     "require-dev": {
