@@ -125,8 +125,8 @@ if ($realpadCustomers) {
             $customFields[4] = $customerData[5]; // TAGY
             $customFields[5] = $customerData[6]; // ID Zákazníka
             $customFields[6] = $customerData[7]; // ID Prodejce
-            $customFields[7] = $customerData[8]; // ID Stavu
-            $customFields[8] = $customerData[9]; // ID Zdroje
+            $customFields[7] = $customerData[8] ?? null; // ID Stavu
+            $customFields[8] = $customerData[9] ?? null; // ID Zdroje
 
             $nextRow = $sheet->getHighestRow() + 1;
 
