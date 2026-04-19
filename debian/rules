@@ -6,13 +6,11 @@
 #export DEB_LDFLAGS_MAINT_APPEND = -Wl,--as-needed
 
 %:
-	dh $@
+	dh $@ --with phpcomposer
 
 override_dh_install:
 	dh_install
-	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  debian/conf/composer.json |sponge debian/conf/composer.json
 	sed -i -e 's/..\/i18n/\/usr\/share\/locale/g'            	        		debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	sed -i -e "s/__DIR__.'\/..\/vendor/'\/var\/lib\/composer\/realpad2mailkit/"    	debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
+	sed -i -e "s/require_once __DIR__\.'\/\.\.\/vendor\/autoload\.php'/require_once __DIR__.'\/autoload.php'/" debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
 	sed -i -e "s/..\/.env//" debian/realpad2mailkit/usr/share/realpad2mailkit/*.php
-	debian/fixdeps > debian/realpad2mailkit/usr/lib/realpad2mailkit/composer.json
 	jq '.version = "'`dpkg-parsechangelog | sed -n 's/^Version: //p'| sed 's/~.*//'`'"'  multiflexi/realpad_to_mailkit.multiflexi.app.json |sponge debian/multiflexi-realpad2mailkit/usr/lib/realpad2mailkit/multiflexi/realpad_to_mailkit.multiflexi.app.json
