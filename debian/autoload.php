@@ -18,10 +18,8 @@ spl_autoload_register(function (string $class): void {
     }
 });
 
-// PhpOffice\PhpSpreadsheet (installed by php-spojenet-realpad-takeout via composer-debian)
-if (file_exists('/var/lib/composer/realpad-takeout/autoload.php')) {
-    require_once '/var/lib/composer/realpad-takeout/autoload.php';
-}
+// PhpOffice\PhpSpreadsheet (from php-phpoffice-phpspreadsheet)
+require_once '/usr/share/php/PhpOffice/PhpSpreadsheet/autoload.php';
 
 // Igloonet\MailkitApi (from php-meditorial-mailkit-api)
 require_once '/usr/share/php/Igloonet/MailkitApi/autoload.php';
