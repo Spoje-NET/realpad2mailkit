@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/VitexSoftware/php-vitexsoftware-multiflexi-core/refs/heads/main/schema/application.json",
-  "schemaVersion": "3.2.1",
+  "schemaVersion": "3.4.0",
   "uuid": "0c58b1a5-dd68-4084-ba84-4665113b18e4",
   "name": {
     "en": "Realpad to Mailkit",
@@ -10,9 +10,19 @@
     "en": "Synchronize Realpad Contacts into Mailkit ",
     "cs": "Synchronizovat kontakty z Realpadu do Mailkitu "
   },
-  "tags": ["Realpad", "Mailkit"],
+  "tags": [
+    "Realpad",
+    "Mailkit"
+  ],
   "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
   "executable": "realpad2mailkit",
+  "events": {
+    "emits": {
+      "contacts.synced": {
+        "description": "Contacts were synchronised"
+      }
+    }
+  },
   "environment": {
     "REALPAD_USERNAME": {
       "type": "string",
