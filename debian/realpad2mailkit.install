@@ -3,4 +3,4 @@ debian/autoload.php             usr/share/realpad2mailkit/
 bin/*                           usr/bin/
 .env.example                    etc/realpad2mailkit
 realpad2mailkit.svg	usr/share/icons/hicolor/scalable/apps/
-io.github.spoje_net.realpad2mailkit.metainfo.xml	usr/share/metainfo/
+debian/io.github.spoje_net.realpad2mailkit.metainfo.xml	usr/share/metainfo/
