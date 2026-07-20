@@ -6,17 +6,7 @@ declare(strict_types=1);
 require_once '/usr/share/php/Ease/autoload.php';
 
 // SpojeNet\Realpad namespace (from php-spojenet-realpad-takeout)
-spl_autoload_register(function (string $class): void {
-    $prefix = 'SpojeNet\\Realpad\\';
-    $len = strlen($prefix);
-    if (strncmp($class, $prefix, $len) !== 0) {
-        return;
-    }
-    $file = '/usr/share/php/RealpadTakeout/' . str_replace('\\', '/', substr($class, $len)) . '.php';
-    if (file_exists($file)) {
-        require $file;
-    }
-});
+require_once '/usr/share/php/RealpadTakeout/autoload.php';
 
 // PhpOffice\PhpSpreadsheet (from php-phpoffice-phpspreadsheet)
 require_once '/usr/share/php/PhpOffice/PhpSpreadsheet/autoload.php';
