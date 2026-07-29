@@ -1,6 +1,8 @@
 # RealPad to MailKit exporter
 
 ![RealPad & MailKit logo](realpad2mailkit.svg?raw=true)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Packaging: deb](https://img.shields.io/badge/packaging-.deb-red?logo=debian&logoColor=white)
 
 Obtain Email contacty from realpad by project/tags and import it into MailKit and send report in XLS format
 
