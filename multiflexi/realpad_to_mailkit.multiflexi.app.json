@@ -14,6 +14,9 @@
     "Realpad",
     "Mailkit"
   ],
+  "requirements": [
+    "Realpad"
+  ],
   "homepage": "https://github.com/Spoje-NET/realpad2mailkit/",
   "executable": "realpad2mailkit",
   "events": {
