@@ -16,8 +16,8 @@
         "phpunit/phpunit": "*",
         "phpstan/phpstan": "*",
         "friendsofphp/php-cs-fixer": "^3.61",
-        "ergebnis/composer-normalize": "^2.43",
-        "ergebnis/php-cs-fixer-config": "^6.34"
+        "ergebnis/composer-normalize": "^2.54",
+        "ergebnis/php-cs-fixer-config": "^6.64"
     },
     "license": "MIT",
     "autoload": {
