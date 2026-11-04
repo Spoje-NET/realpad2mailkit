@@ -1,8 +1,10 @@
-realpad2mailkit (1.1.0) UNRELEASED; urgency=medium
+realpad2mailkit (1.2.0) unstable; urgency=medium
 
-  * fully debianized
+  * Release 1.2.0: migrate from deprecated list-excel-customers to the
+    list-excel-customers-contacts + list-excel-inquiries combination
+    (filters and import now handle multiple inquiries per customer)
 
- -- vitex <info@vitexsoftware.cz>  Sun, 19 Apr 2026 21:25:52 +0200
+ -- vitex <info@vitexsoftware.cz>  Wed, 04 Nov 2026 19:35:24 +0100
 
 realpad2mailkit (1.0.0) unstable; urgency=medium
 
