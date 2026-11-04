@@ -51,37 +51,67 @@ if (\Ease\Shared::cfg('APP_DEBUG')) {
     $realpad->logBanner();
 }
 
-$realpadCustomers = $realpad->listCustomers();
+// Customers with their contact details combined with their inquiries.
+// Replaces the deprecated list-excel-customers endpoint, which could not
+// capture customers with multiple inquiries. One customer may have zero,
+// one or many inquiries - they are nested under the 'inquiries' key.
+$realpadCustomers = $realpad->listCustomersWithInquiries();
 
 if ($realpadCustomers) {
-    $sheet->fromArray(array_merge(['reason'], array_keys(current($realpadCustomers))), null, 'A1');
+    $headerRow = current($realpadCustomers);
+    unset($headerRow['inquiries']);
+    $sheet->fromArray(array_merge(['reason'], array_keys($headerRow)), null, 'A1');
 
     $nomailCount = 0;
     $problems = [];
     $customers = [];
     $nextRow = 0;
+    $knownMails = [];
 
     foreach ($realpadCustomers as $cid => $customerData) {
+        // Tags and projects may sit on the contact itself or on any of its inquiries
+        $tags = (string) ($customerData['Tagy'] ?? '');
+        $projects = (string) ($customerData['Projekt'] ?? '');
+
+        foreach ($customerData['inquiries'] ?? [] as $inquiry) {
+            $tags .= ' '.($inquiry['Tagy'] ?? '');
+            $projects .= ' '.($inquiry['Projekt'] ?? '');
+        }
+
         if (\Ease\Shared::cfg('REALPAD_TAG', false)) {
-            if (strstr($customerData['Tagy'], \Ease\Shared::cfg('REALPAD_TAG'))) {
+            if (strstr($tags, \Ease\Shared::cfg('REALPAD_TAG'))) {
                 $customers[$cid] = $customerData;
             }
         } elseif (\Ease\Shared::cfg('REALPAD_PROJECT', false)) {
-            if (strstr($customerData['Projekt'], \Ease\Shared::cfg('REALPAD_PROJECT'))) {
+            if (strstr($projects, \Ease\Shared::cfg('REALPAD_PROJECT'))) {
                 $customers[$cid] = $customerData;
             }
         } else {
             $customers[$cid] = $customerData;
         }
 
-        if (\array_key_exists($cid, $customers) && empty(trim((string) $customers[$cid]['E-mail']))) {
-            $realpad->addStatusMessage('No mail address for #'.$cid.' '.$customerData['Jméno'].' ('.$nomailCount++.')', 'debug');
-            $nextRow = $sheet->getHighestRow() + 1;
-            $sheet->fromArray(array_merge(['reason' => 'No mail address'], $customerData), null, 'A'.$nextRow);
-            $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
-            unset($customers[$cid]);
+        if (\array_key_exists($cid, $customers)) {
+            $mail = trim((string) ($customers[$cid]['E-mail'] ?? ''));
 
-            continue;
+            if ($mail === '') {
+                $logRow = $customerData;
+                unset($logRow['inquiries']);
+                $realpad->addStatusMessage('No mail address for #'.$cid.' '.($customerData['Jméno'] ?? '').' ('.$nomailCount++.')', 'debug');
+                $nextRow = $sheet->getHighestRow() + 1;
+                $sheet->fromArray(array_merge(['reason' => 'No mail address'], $logRow), null, 'A'.$nextRow);
+                $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaeeee90');
+                unset($customers[$cid]);
+
+                continue;
+            }
+
+            if (isset($knownMails[$mail])) {
+                unset($customers[$cid]);
+
+                continue;
+            }
+
+            $knownMails[$mail] = true;
         }
     }
 
@@ -107,11 +137,14 @@ if ($realpadCustomers) {
     $position = 0;
     $importErrors = 0;
 
-    foreach ($customers as $customerInfo) {
+    foreach ($customers as $cid => $customerInfo) {
         ++$position;
-        $customerData = array_values($customerInfo);
+        $inquiry = $customerInfo['inquiries'][0] ?? [];
+        $logRow = $customerInfo;
+        unset($logRow['inquiries']);
+        $logValues = array_values($logRow);
 
-        $nameFields = explode(' ', $customerInfo['Jméno']);
+        $nameFields = explode(' ', (string) ($customerInfo['Jméno'] ?? ''));
 
         if (current($nameFields) === '_') {
             unset($nameFields[0]);
@@ -119,41 +152,42 @@ if ($realpadCustomers) {
 
         try {
             $customFields = [];
-            $customFields[1] = $customerData[0]; // Projekt
-            $customFields[2] = $customerData[1]; // Stav
-            $customFields[3] = $customerData[2]; // Datum Přidání
-            $customFields[4] = $customerData[5]; // TAGY
-            $customFields[5] = $customerData[6]; // ID Zákazníka
-            $customFields[6] = $customerData[7]; // ID Prodejce
-            $customFields[7] = $customerData[8] ?? null; // ID Stavu
-            $customFields[8] = $customerData[9] ?? null; // ID Zdroje
+            $customFields[1] = $inquiry['Projekt'] ?? $customerInfo['Projekt'] ?? null; // Projekt
+            $customFields[2] = $inquiry['Stav'] ?? $customerInfo['Stav'] ?? null; // Stav
+            $customFields[3] = $customerInfo['Datum přidání'] ?? $inquiry['Datum přidání'] ?? null; // Datum Přidání
+            $customFields[4] = $customerInfo['Tagy'] ?? $inquiry['Tagy'] ?? null; // TAGY
+            $customFields[5] = $cid; // ID Zákazníka
+            $customFields[6] = $inquiry['Prodejce ID'] ?? $customerInfo['Prodejce ID'] ?? null; // ID Prodejce
+            $customFields[7] = $inquiry['Stav ID'] ?? $customerInfo['Stav ID'] ?? null; // ID Stavu
+            $customFields[8] = $inquiry['Zdroj ID'] ?? $customerInfo['Zdroj ID'] ?? null; // ID Zdroje
 
             $nextRow = $sheet->getHighestRow() + 1;
 
             $firstname = current($nameFields);
             $lastname = next($nameFields);
 
-            $user = (new \Igloonet\MailkitApi\DataObjects\User($customerInfo['E-mail']))
+            $user = (new \Igloonet\MailkitApi\DataObjects\User((string) ($customerInfo['E-mail'] ?? '')))
                 ->setFirstname($firstname ?: null)->setLastname($lastname ?: null)->setCustomFields($customFields);
             $newUser = $userManager->addUser($user, $mailingList->getId(), false);
-            $sheet->fromArray(array_merge(['reason' => 'success'], $customerData), null, 'A'.$nextRow);
+            $sheet->fromArray(array_merge(['reason' => 'success'], $logValues), null, 'A'.$nextRow);
             $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aa90ee90');
             $realpad->addStatusMessage(sprintf('%4d/%4d: User  %60s %40s Imported', $position, \count($customers), $user->getFirstName().' '.$user->getLastName(), $customerInfo['E-mail']), 'success');
         } catch (\Igloonet\MailkitApi\Exceptions\User\UserCreationException $exc) {
             echo $exc->getTraceAsString();
-            // Convert php array $customerInfo to human readable string
-            array_walk($customerInfo, static function (&$value, $key): void {
+            // Convert php array $logRow to human readable string
+            $logInfo = $logRow;
+            array_walk($logInfo, static function (&$value, $key): void {
                 $value = "{$key}: {$value}";
             });
-            $customerInfo = array_reduce($customerInfo, static function ($carry, $item) {
+            $logInfo = array_reduce($logInfo, static function ($carry, $item) {
                 return $carry."\n".$item;
             });
-            $realpad->addStatusMessage($exc->getMessage().' '.$customerInfo, 'error');
+            $realpad->addStatusMessage($exc->getMessage().' '.$logInfo, 'error');
             ++$importErrors;
 
-            $sheet->fromArray(array_merge(['reason' => $exc->getMessage()], $customerData), null, 'A'.$nextRow);
+            $sheet->fromArray(array_merge(['reason' => $exc->getMessage()], $logValues), null, 'A'.$nextRow);
             $sheet->getStyle('A'.$nextRow.':K'.$nextRow)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setARGB('aaFF0000');
-            $problems[] = array_merge(['reason' => $exc->getMessage()], $customerData);
+            $problems[] = array_merge(['reason' => $exc->getMessage()], $logValues);
         }
     }
 
