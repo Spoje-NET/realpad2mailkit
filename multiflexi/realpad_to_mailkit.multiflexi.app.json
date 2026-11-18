@@ -38,14 +38,14 @@
       "required": false
     },
     "REALPAD_PASSWORD": {
-      "type": "string",
+      "type": "password",
       "description": {
-        "en": "Your Realpad Password",
-        "cs": "Vaše Realpad Heslo"
+        "en": "Realpad API password",
+        "cs": "Heslo pro API Realpad"
       },
       "defval": "",
-      "category": "Security",
-      "required": false
+      "required": true,
+      "category": "Security"
     },
     "REALPAD_TAG": {
       "type": "string",
