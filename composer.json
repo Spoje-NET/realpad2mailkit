@@ -3,7 +3,7 @@
     "description": "Use mail adress from realpad in mailkit",
     "type": "project",
     "require": {
-        "spojenet/realpad-takeout": "^1.0",
+        "spojenet/realpad-takeout": "^2.0",
         "meditorial/mailkit-api": "dev-main"
     },
     "repositories": [
